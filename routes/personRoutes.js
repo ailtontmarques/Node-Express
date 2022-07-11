@@ -113,6 +113,7 @@ const personRoute = (app) => {
             }
 
             if (cpf1Validation && cpf2Validation) {
+                // console.log('===>', JSON.stringify(relationships));
                 relationships.push(req.body);
                 saveRelationship(relationships);
 
@@ -125,16 +126,58 @@ const personRoute = (app) => {
 
     app.route('/recommendations/:cpf?')
         .get((req, res) => {
+            var grandFather = [];
+            var father = [];
+            var son = [];
+
+            const relationships = getRelationships();
+
             if (req.params.cpf && req.params.cpf.length==11 && isNumber(req.params.cpf)) {
-                res.status(200).send('Ok')
+                Object.keys(relationships).forEach(key => {
+                    // console.log(key + ' - ' + file[key]) // key - value
+                    grandFather.push({'avo': relationships[key].cpf1, 'pai': relationships[key].cpf2});
+                });
+                
+                Object.keys(grandFather).forEach(key => {
+                    father.push({'pai': grandFather[key].avo, 'filho': grandFather[key].pai})
+                });
+                
+                Object.keys(grandFather).forEach(key => {
+                    Object.keys(father).forEach(key1 => {
+                        if ((grandFather[key].pai != '64002974138') && (grandFather[key].pai == father[key1].pai)) {
+                            son.push({'filho': father[key1].pai, 'neto': father[key1].filho})
+                        }
+                    });
+                    
+                });
+                
+                // console.log(JSON.stringify(grandFather));
+                // console.log(JSON.stringify(father));
+                // console.log(JSON.stringify(son));
+
+                const unique = [...new Set(son.map(item => item.neto))];
+
+                // console.log(unique);
+                
+                res.status(200).send(unique);
             } else {
-                res.status(400).send('CPF not valid')
+                res.status(400).send('CPF not valid');
             }
         })
 
     app.route('/clean/')
         .delete((req, res) => {
-            res.status(200).send('Ok')
+            try {
+                if (fs.existsSync(filePath)) {
+                    fs.unlinkSync(filePath);
+                }
+                if (fs.existsSync(filePathRelation)) {
+                    fs.unlinkSync(filePathRelation);
+                }
+                res.status(200).send('Ok');
+            } catch (error) {
+                res.status(400).send('Fail to cleanup');
+            }
         })
 };
 
