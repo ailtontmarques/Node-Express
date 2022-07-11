@@ -4,14 +4,21 @@
   "description": "Versao inicial do projeto",
   "main": "index.js",
   "scripts": {
-    "development": "node index.js",
+    "development": "node server.js",
     "test": "npm run test:unit",
-    "test:unit": "echo \"Error: no test specified\" && exit 1"
+    "test:unit": "jest"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
     "router": "^1.3.5"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "jest": "^28.1.2",
+    "superagent": "^8.0.0",
+    "supertest": "^6.2.4"
   }
 }

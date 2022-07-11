@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Remove o container, se existir
-docker stop node-express
-docker container rm node-express
+docker stop nodeexpress
+docker container rm nodeexpress
 
 # Gera o container
-docker run --name node-express -p 3000:3000
+docker run --publish 3000:3000 nodeexpress
