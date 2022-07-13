@@ -144,7 +144,7 @@ const personRoute = (app) => {
                 
                 Object.keys(grandFather).forEach(key => {
                     Object.keys(father).forEach(key1 => {
-                        if ((grandFather[key].pai != '64002974138') && (grandFather[key].pai == father[key1].pai)) {
+                        if ((grandFather[key].pai != req.params.cpf) && (grandFather[key].pai == father[key1].pai)) {
                             son.push({'filho': father[key1].pai, 'neto': father[key1].filho})
                         }
                     });
